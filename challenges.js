@@ -1,0 +1,98 @@
+// Fill each word with your own five-letter answer (A-Z). No original answers remain.
+// Change version when replacing puzzles to start fresh browser progress.
+const CHALLENGE_SETTINGS = {
+  version: 'my-puzzles-1',
+  countdownTarget: '2026-11-01T08:45:00+01:00',
+  timedUnlocks: true,
+  unlockStart: '2026-10-24T17:30:00+01:00',
+  unlockEnd: '2026-10-25T00:00:00+01:00'
+};
+const CHALLENGES = [
+  {
+    "id": 1,
+    "type": "wordle",
+    "word": "CUTIE"
+  },
+  {
+    id: 2,
+    type: 'geo',
+    streetViewEmbedUrl: 'https://www.google.com/maps/embed?pb=!4v1792929587488!6m8!1m7!1s9g8WOaaxe5RDzj8o2ah6Gg!2m2!1d50.68811568425743!2d14.76173964878918!3f264.9477429116344!4f-29.22096189071086!5f0.7820865974627469',
+    latitude: 50.5031131,
+    longitude: 14.6226569,
+    radiusMeters: 250
+  },
+  {
+    "id": 3,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 4,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 5,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 6,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 7,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 8,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 9,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 10,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 11,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 12,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 13,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 14,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 15,
+    "type": "wordle",
+    "word": ""
+  },
+  {
+    "id": 16,
+    "type": "wordle",
+    "word": ""
+  }
+];
+
+// To replace a word challenge with geography, use:
+// { id: 1, type: 'geo', streetViewEmbedUrl: '', latitude: null, longitude: null, radiusMeters: 250 }
+// Paste the iframe src URL from your chosen Street View embed.

@@ -1,0 +1,4 @@
+*.zip
+*-preview.png
+_site/
+node_modules/

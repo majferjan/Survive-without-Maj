@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="strict-origin-when-cross-origin"><title>Location challenge</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="geo.css"></head>
+<body>
+<main class="game">
+  <iframe id="streetview" title="Explore the mystery location" referrerpolicy="strict-origin-when-cross-origin" hidden></iframe>
+  <header class="location-cover"><span class="eyebrow">FIELD MISSION <span id="missionNumber"></span></span><h1>WHERE ARE YOU?</h1><p>Explore. Find clues. Place your pin.</p></header>
+  <nav class="tools" aria-label="Game controls"><button id="restart" title="Return to the starting panorama">↶ Start</button><button id="exit">✕ Close</button></nav>
+  <p id="feedback" class="feedback" role="status" aria-live="polite">Loading your mission…</p>
+  <section class="guess-panel" id="guessPanel" aria-label="Guessing map">
+    <header class="map-header"><span>CHOOSE YOUR LOCATION</span><button id="expand" aria-expanded="false" aria-controls="map">⤢ Expand map</button></header>
+    <div id="map" aria-label="Click or tap to place a guess"></div>
+    <p id="mapStatus" role="status" hidden></p>
+    <button id="submit" disabled>PLACE A PIN TO GUESS</button>
+  </section>
+  <aside id="result" class="result" hidden><span class="eyebrow">MISSION COMPLETE</span><h2>You're right on target.</h2><p id="resultDistance"></p><button id="finish">Continue missions →</button></aside>
+</main>
+<script src="challenges.js"></script><script src="puzzle-core.js"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="geo.js"></script></body></html>

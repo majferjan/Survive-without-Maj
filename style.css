@@ -1,0 +1,352 @@
+:root{--bg:#050909;--panel:rgba(4,10,11,.58);--line:rgba(232,244,240,.14);--line-strong:rgba(115,235,176,.38);--text:#f3f7f5;--muted:#a8b8b2;--accent:#73ebb0;--danger:#ff9f9f;--shadow:0 22px 60px rgba(0,0,0,.28)}*{box-sizing:border-box}html,body{min-height:100%;margin:0}html{background:var(--bg)}body{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--text);background-color:var(--bg);overflow:hidden}body:before{content:"";position:fixed;inset:-24px;z-index:0;background-image:linear-gradient(180deg,rgba(2,6,7,.12),rgba(2,6,7,.20) 58%,rgba(2,6,7,.34)),url("assets/background.jpg");background-size:cover;background-position:center 70%;background-repeat:no-repeat;filter:blur(18px) saturate(.9);transform:scale(1.08);pointer-events:none}body:after{content:"";position:fixed;inset:0;z-index:0;background-image:linear-gradient(180deg,rgba(2,6,7,.05),rgba(2,6,7,.12) 58%,rgba(2,6,7,.25)),url("assets/background.jpg"),radial-gradient(circle at center,transparent 20%,rgba(0,0,0,.18) 82%),url("assets/hud-pattern.svg");background-size:100% 100%,auto 100%,100% 100%,auto;background-position:center,31% center,center,center;background-repeat:no-repeat,no-repeat,no-repeat,repeat;pointer-events:none}
+.app-shell,.reset-button,
+.skip-link{position:relative;z-index:1}.skip-link{position:absolute;left:16px;top:-48px;z-index:20;padding:10px 14px;border-radius:10px;color:var(--bg);background:var(--accent);text-decoration:none}.skip-link:focus-visible{top:16px}.app-shell{display:grid;grid-template-columns:minmax(320px,500px) minmax(120px,1fr) minmax(620px,820px);gap:22px;min-height:100vh;padding:26px 18px 56px}.panel{min-height:calc(100vh - 52px);border:1px solid var(--line);border-radius:32px;background:linear-gradient(180deg,rgba(4,12,13,.48),rgba(4,10,11,.64));backdrop-filter:blur(12px) saturate(120%);-webkit-backdrop-filter:blur(18px) saturate(120%);box-shadow:var(--shadow)}.panel-left{display:flex;flex-direction:column;padding:26px 28px 22px}.panel-right{display:grid;grid-template-columns:minmax(260px,380px) minmax(280px,1fr);overflow:hidden}.missions-column,
+.detail-column{min-height:100%}.missions-column{padding:22px 14px 22px 18px;border-right:1px solid var(--line)}.detail-column{padding:22px 40px 26px 26px}.center-space{min-width:0}.eyebrow,.label,.kicker,.column-title,.badge,.mission-button,.countdown-label,.reset-button,.feedback,input,button{letter-spacing:.08em}.eyebrow,.label,.kicker,.column-title{margin:0;font-size:13px;color:var(--text);opacity:.92}
+.project-title,
+.detail-title,
+.final-title{
+    margin:14px 0 18px;
+    font-weight:400;
+    line-height:.92;
+    text-transform:uppercase;
+}
+
+.project-title{
+    font-family:"Rubik Glitch", sans-serif;
+    letter-spacing:.08em;
+}
+.detail-title,
+.final-title{
+    font-family:"Black Ops One",Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+    white-space:nowrap;
+}
+.minecraft-hint{
+    font-family:'Minecraft', monospace;
+}
+.project-title{font-size:clamp(3rem,4.8vw,5.6rem)}
+.detail-title,
+.final-title{font-size:clamp(2.2rem,3.2vw,3.6rem)}
+.divider,.rule{width:100%;height:1px;background:var(--line)}.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding:22px 0 18px}.stat-value{margin:10px 0 0;font-size:clamp(2rem,3vw,3rem);line-height:1;font-weight:700}.accent-text{color:var(--accent)}.progress-track{width:100%;height:8px;margin-top:14px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}.progress-fill{width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),#94ffd0);transition:width 240ms ease}.kicker{margin-top:28px;margin-bottom:16px}.countdown-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.countdown-box{min-height:108px;padding:16px 12px 12px;border:1px solid var(--line);border-radius:18px;background:rgba(1,8,9,.2)}.countdown-number{font-size:clamp(2rem,3vw,3rem);font-weight:700;line-height:1;color:var(--accent);text-align:center}.countdown-label{margin-top:12px;font-size:.7rem;color:var(--text);opacity:.85;text-align:center}.footnote{margin-top:auto;padding-top:24px;font-size:12px;color:var(--text);opacity:.9}.footnote p{margin:0 0 6px}.column-head{padding-bottom:14px;border-bottom:1px solid var(--line)}.missions-list{display:grid;gap:10px;max-height:calc(100vh - 110px);overflow:auto;padding:16px 4px 6px 0}.mission-button{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;width:100%;padding:14px 12px;border:1px solid transparent;border-bottom-color:var(--line);border-radius:14px;color:var(--text);background:transparent;text-align:left;font:inherit;cursor:pointer;transition:border-color 180ms ease,background-color 180ms ease,transform 180ms ease,opacity 180ms ease}.mission-button:hover:not(.is-locked),.mission-button:focus-visible:not(.is-locked),.mission-button.is-active{border-color:var(--line-strong);background:linear-gradient(90deg,rgba(17,54,35,.56),rgba(7,20,16,.2));transform:translateY(-1px)}.mission-button.is-locked{opacity:.55}.mission-button .icon{color:var(--accent);font-size:1.2rem}
+.detail-top{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+}
+.badge{
+    margin-top:12px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:34px;
+    padding:0 14px;
+    border:1px solid var(--line-strong);
+    border-radius:999px;
+    color:var(--accent);
+    background:rgba(7,24,13,.34);
+    font-size:.77rem;
+    white-space:nowrap;
+
+    flex:0 0 auto;
+}
+.detail-copy,.detail-message,.final-copy{margin:20px 0 0;font-size:1rem;line-height:1.8;color:var(--text)}.detail-copy strong,.final-copy strong{color:var(--accent)}.form-wrap{margin-top:18px}.form-stack{display:grid;gap:12px}.input-label{display:inline-block;margin-bottom:6px;font-size:13px}.answer-input,.verify-button{width:100%;min-height:56px;border-radius:12px;font:inherit}.answer-input{border:1px solid var(--line);padding:0 16px;color:var(--text);background:rgba(0,0,0,.2)}.answer-input::placeholder{color:rgba(243,247,245,.5)}.verify-button,.reset-button{border:1px solid var(--line-strong);color:var(--accent);background:linear-gradient(180deg,rgba(14,49,30,.36),rgba(8,26,19,.62));font-weight:700;cursor:pointer}.verify-button:hover,.reset-button:hover,.verify-button:focus-visible,.reset-button:focus-visible{filter:brightness(1.06)}.feedback{min-height:40px;margin-top:12px;font-size:.92rem;line-height:1.6;opacity:0;transform:translateY(6px);transition:opacity 180ms ease,transform 180ms ease}.feedback.is-visible{opacity:1;transform:translateY(0)}.feedback.is-good{color:var(--accent)}.feedback.is-bad{color:var(--danger)}.reset-button{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);min-height:34px;padding:0 12px;border-radius:999px;font-size:.73rem;z-index:5}.hidden-title{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.fade-in{animation:fadeInUp 320ms ease both}@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}:focus-visible{outline:2px solid var(--accent);outline-offset:2px}::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{border:2px solid transparent;border-radius:999px;background:rgba(115,235,176,.28);background-clip:padding-box}::-webkit-scrollbar-track{background:transparent}@media(max-width:1420px){.app-shell{grid-template-columns:minmax(300px,430px) minmax(64px,1fr) minmax(560px,760px)}}@media(max-width:1180px){body{overflow:auto}.app-shell{grid-template-columns:1fr;gap:16px;min-height:auto;padding-bottom:72px}.panel{min-height:auto}.panel-right{grid-template-columns:1fr}.missions-column{border-right:0;border-bottom:1px solid var(--line)}.missions-list{max-height:none}.center-space{display:none}}@media(max-width:720px){.panel-left,.missions-column,
+.detail-column{padding-left:16px;padding-right:16px}
+.project-title{font-size:clamp(2.7rem,16vw,4.4rem)}.countdown-grid,.stats-grid{grid-template-columns:1fr 1fr}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* =========================================================
+   GAMER HUD UPGRADE — mission copy and mission typography stay unchanged
+   ========================================================= */
+:root{
+  --hud-green:#73ebb0;
+  --hud-bright:#9affd0;
+  --hud-dim:rgba(115,235,176,.18);
+  --hud-grid:rgba(115,235,176,.045);
+}
+
+/* Keep the same centered portrait composition, but darken it substantially. */
+body::after{
+  background-image:
+    linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    linear-gradient(180deg,rgba(1,5,6,.09),rgba(1,5,6,.17) 58%,rgba(1,5,6,.34)),
+    url("assets/background.jpg"),
+    radial-gradient(circle at 50% 48%,transparent 18%,rgba(0,0,0,.42) 72%,rgba(0,0,0,.72) 100%),
+    url("assets/hud-pattern.svg");
+  background-size:100% 100%,100% 100%,auto 100%,100% 100%,auto;
+  background-position:center,center,31% center,center,center;
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,repeat;
+}
+
+/* Fine tactical grid and CRT scanlines across the whole interface. */
+.app-shell::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:7;
+  pointer-events:none;
+  opacity:.38;
+  background-image:
+    linear-gradient(var(--hud-grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--hud-grid) 1px,transparent 1px),
+    repeating-linear-gradient(to bottom,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,transparent 1px,transparent 4px);
+  background-size:42px 42px,42px 42px,100% 4px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),rgba(0,0,0,.28));
+}
+
+.panel{
+  border-color:rgba(115,235,176,.30);
+  background:
+    linear-gradient(135deg,rgba(115,235,176,.06),transparent 14%) top left/90px 90px no-repeat,
+    linear-gradient(225deg,rgba(115,235,176,.05),transparent 14%) top right/90px 90px no-repeat,
+    linear-gradient(45deg,rgba(115,235,176,.045),transparent 14%) bottom left/90px 90px no-repeat,
+    linear-gradient(315deg,rgba(115,235,176,.045),transparent 14%) bottom right/90px 90px no-repeat,
+    linear-gradient(180deg,rgba(2,8,9,.68),rgba(2,7,8,.80));
+  box-shadow:
+    0 22px 60px rgba(0,0,0,.42),
+    inset 0 0 0 1px rgba(255,255,255,.025),
+    inset 0 0 34px rgba(115,235,176,.035),
+    0 0 22px rgba(115,235,176,.055);
+}
+
+/* Tactical bracket accents inside both main panels. */
+.panel-left,.panel-right{position:relative}
+
+.project-title,
+.detail-title,
+.final-title{
+
+    color:#f8fff9;
+
+    text-shadow:
+        0 0 2px #ffffff,
+        0 0 5px rgba(255,255,255,.7),
+        0 0 8px rgba(110,255,180,.65),
+        0 0 14px rgba(0,255,130,.32);
+
+}
+
+.detail-title,
+.final-title{
+
+    color:#f5f8f6;
+
+    text-shadow:
+        0 0 3px rgba(255,255,255,.4),
+        0 0 8px rgba(115,235,176,.18);
+
+}
+/* Do not alter mission text font/content; only add subtle terminal glow. */
+.mission-button,.detail-copy,.detail-message,.final-copy,.input-label,.answer-input{
+  text-shadow:none;
+}
+
+.column-title,.eyebrow,.label,.kicker{
+  text-shadow:0 0 9px rgba(115,235,176,.12);
+}
+
+.mission-button{
+  border-color:rgba(115,235,176,.05);
+  border-bottom-color:rgba(115,235,176,.16);
+  background:linear-gradient(90deg,rgba(0,0,0,.08),rgba(0,0,0,.18));
+  box-shadow:inset 0 0 14px rgba(115,235,176,.012);
+}
+
+.mission-button:hover:not(.is-locked),
+.mission-button:focus-visible:not(.is-locked),
+.mission-button.is-active{
+  border-color:rgba(115,235,176,.68);
+  background:
+    linear-gradient(90deg,rgba(18,78,47,.58),rgba(4,19,14,.34)),
+    repeating-linear-gradient(135deg,rgba(115,235,176,.025) 0 5px,transparent 5px 11px);
+  box-shadow:
+    inset 0 0 20px rgba(115,235,176,.08),
+    0 0 13px rgba(115,235,176,.18),
+    0 0 30px rgba(115,235,176,.07);
+}
+
+.progress-track,.answer-input{
+  border:1px solid rgba(115,235,176,.27);
+  box-shadow:inset 0 0 18px rgba(0,0,0,.32);
+}
+
+.progress-fill{
+  background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 7px,transparent 7px 13px),
+    linear-gradient(90deg,var(--hud-green),var(--hud-bright));
+  box-shadow:0 0 10px rgba(115,235,176,.48),0 0 25px rgba(115,235,176,.20);
+}
+
+.countdown-box{
+  border-color:rgba(115,235,176,.25);
+  background:linear-gradient(180deg,rgba(0,13,11,.26),rgba(0,4,5,.32));
+  box-shadow:inset 0 0 16px rgba(115,235,176,.025);
+}
+
+.countdown-number,
+.stat-value,
+.accent-text{
+
+    color:#73ebb0;
+
+    text-shadow:
+        0 0 4px rgba(255,255,255,.5),
+        0 0 10px rgba(115,235,176,.6),
+        0 0 18px rgba(0,255,120,.25);
+
+}
+.badge,.verify-button,.reset-button{
+  box-shadow:inset 0 0 20px rgba(115,235,176,.055),0 0 12px rgba(115,235,176,.12);
+}
+
+.verify-button:hover,.reset-button:hover{
+  filter:brightness(1.12);
+  box-shadow:inset 0 0 24px rgba(115,235,176,.12),0 0 15px rgba(115,235,176,.34),0 0 34px rgba(115,235,176,.12);
+}
+
+.divider,.rule,.column-head{
+  filter:drop-shadow(0 0 4px rgba(115,235,176,.12));
+}
+
+@media(max-width:1180px){
+  .app-shell::after{display:none}
+  body::after{background-size:100% 100%,100% 100%,cover,100% 100%,auto;background-position:center,center,center center,center,center}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .app-shell::before{background-image:linear-gradient(var(--hud-grid) 1px,transparent 1px),linear-gradient(90deg,var(--hud-grid) 1px,transparent 1px);background-size:42px 42px,42px 42px}
+}
+.project-title{
+    position:relative;
+    letter-spacing:.01em;
+    animation:titlePulse 2.2s ease-in-out infinite;
+    will-change:opacity;
+}
+.project-title::before{
+
+    content:attr(id);
+
+    content:"SURVIVE\A WITHOUT\A MAJ";
+
+    white-space:pre;
+
+    position:absolute;
+
+    inset:0;
+
+    color:#56ff9d;
+
+    opacity:.42;
+
+    transform:translate(5px,-3px);
+
+    mix-blend-mode:screen;
+
+    pointer-events:none;
+
+    animation:titleGhostPulse 2.2s ease-in-out infinite;
+
+}
+@keyframes titlePulse{
+    0%,100%{
+        opacity:.35;
+        filter:brightness(.2);
+
+        text-shadow:
+            0 0 2px rgba(255,255,255,.3),
+            0 0 6px rgba(115,235,176,.3),
+            0 0 12px rgba(0,255,120,.15);
+    }
+
+    50%{
+        opacity:1;
+        filter:brightness(4);
+
+        text-shadow:
+            0 0 3px #ffffff,
+            0 0 10px rgba(255,255,255,.9),
+            0 0 22px rgba(115,235,176,.9),
+            0 0 40px rgba(0,255,120,.55);
+    }
+}
+@keyframes titleGhost{
+
+    0%,82%,100%{
+        transform:translate(5px,-3px);
+        opacity:.35;
+    }
+
+    83%{
+        transform:translate(12px,-4px);
+        opacity:.9;
+    }
+
+    84%{
+        transform:translate(-7px,2px);
+        opacity:.75;
+    }
+
+    84.5%{
+        transform:translate(5px,-3px);
+        opacity:.35;
+    }
+
+    92%{
+        transform:translate(14px,-2px);
+        opacity:.9;
+    }
+
+    92.5%{
+        transform:translate(-10px,1px);
+        opacity:.85;
+    }
+
+    93%{
+        transform:translate(5px,-3px);
+        opacity:.35;
+    }
+}
+@keyframes titleGhostPulse{
+    0%,100%{
+        opacity:.18;
+        transform:translate(4px,-2px);
+    }
+
+    50%{
+        opacity:.7;
+        transform:translate(7px,-3px);
+    }
+}
+
+/* Mission 04 — embedded MAJDLE terminal */
+.majdle-launch{margin-top:18px}
+.terminal-button{width:100%;min-height:52px;padding:0 16px;border:1px solid rgba(115,235,176,.55);border-radius:12px;color:var(--accent);background:linear-gradient(180deg,rgba(14,49,30,.48),rgba(8,26,19,.72));font:700 .82rem "IBM Plex Mono",monospace;letter-spacing:.1em;cursor:pointer;box-shadow:inset 0 0 20px rgba(115,235,176,.06),0 0 14px rgba(115,235,176,.14)}
+.terminal-button:hover,.terminal-button:focus-visible{filter:brightness(1.12);box-shadow:inset 0 0 24px rgba(115,235,176,.12),0 0 18px rgba(115,235,176,.28)}
+.majdle-shell{margin-top:14px;padding:8px;border:1px solid rgba(115,235,176,.30);border-radius:14px;background:rgba(0,0,0,.36);box-shadow:inset 0 0 22px rgba(0,0,0,.45),0 0 18px rgba(115,235,176,.08)}
+.majdle-shell[hidden]{display:none}
+.majdle-frame{
+    display:block;
+    width:100%;
+    height:min(690px,72vh);
+    border:0;
+    border-radius:9px;
+    background:#fff;
+}
+.majdle-instruction{margin:14px 0 0;color:var(--muted);font-size:.86rem;line-height:1.6}
+@media(max-width:720px){.majdle-frame{height:680px}}
+
+
+#progressText { text-align: right; }
+.geo-launch{margin-top:22px}
+.geo-dialog{position:fixed;inset:0;width:calc(100vw - 24px);height:calc(100dvh - 24px);max-width:none;max-height:none;margin:auto;padding:0;border:1px solid #73ebb060;border-radius:18px;overflow:hidden;background:#101725;color:#fff;box-shadow:0 20px 100px #000a}
+.geo-dialog::backdrop{background:#02080de8;backdrop-filter:blur(8px)}
+.geo-dialog iframe{display:block;width:100%;height:100%;border:0}
+@media(max-width:600px){.geo-dialog{width:100vw;height:100dvh;border:0;border-radius:0}}
+
+/* Center the photo in the actual desktop gap, including asymmetric panels. */
+@media(min-width:1181px){
+  body::after{
+    background-size:100% 100%,100% 100%,auto 100%,100% 100%,auto;
+    background-position:center,center,var(--photo-left, 30vw) bottom,center,center;
+  }
+}
+
+/* Only the opened puzzle needs independent scrolling; keep the original shell. */
+@media(min-width:1181px){.detail-column:has(.majdle-shell:not([hidden])){max-height:calc(100vh - 52px);overflow-y:auto}}
