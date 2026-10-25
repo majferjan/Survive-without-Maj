@@ -7,7 +7,7 @@ class Element {
  querySelectorAll(){return this.children.flatMap(row=>row.children);}
  showModal(){this.open=true;} close(){this.open=false;}
 }
-const ids=Object.fromEntries(['message','board','keyboard','retry','helpButton','closeHelp','help'].map(id=>[id,new Element()]));
+const ids=Object.fromEntries(['message','board','keyboard','retry','helpButton','closeHelp','help','closeGame'].map(id=>[id,new Element()]));
 const saved=new Map();
 const context=vm.createContext({URLSearchParams,location:{search:'?mission=1',origin:'http://localhost'},parent:{postMessage(){}},document:{getElementById:id=>ids[id],createElement:()=>new Element(),addEventListener(){}},localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v),removeItem:k=>saved.delete(k)}});
 vm.runInContext("const CHALLENGE_SETTINGS={version:'test'};const CHALLENGES=[{id:1,type:'wordle',word:'apple'}];const VALID_WORDS=new Set(['crane']);",context);
@@ -21,3 +21,12 @@ assert.equal([...saved.values()][0],'["crane"]');
 vm.runInContext("handle('a');handle('Backspace');",context);
 assert.equal(created,before);
 console.log('PASS: persistent Wordle tiles, zero DOM allocation on typing, scoring redraw, and saved guesses.');
+
+const resetContext=vm.createContext({});
+vm.runInContext(fs.readFileSync('reset-progress.js','utf8'),resetContext);
+const entries=new Map([['custom-challenges-test','[1]'],['wordle-test-1-example','[]'],['unrelated','keep'],['custom-challenges-other','keep']]);
+const mock={get length(){return entries.size},key:i=>[...entries.keys()][i],removeItem:key=>entries.delete(key)};
+assert.equal(resetContext.resetChallengeProgress(mock,'test'),2);
+assert.equal(entries.get('unrelated'),'keep');
+assert.equal(entries.get('custom-challenges-other'),'keep');
+console.log('PASS: reset only removes current puzzle-set progress.');

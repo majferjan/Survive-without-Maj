@@ -2,7 +2,7 @@
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Word challenge</title><link rel="stylesheet" href="wordle.css"></head>
 <body><main class="app">
-<header><h1>WORD CHALLENGE</h1><button class="info" aria-label="How to play" id="helpButton">?</button></header>
+<header><h1>WORD CHALLENGE</h1><button class="info" aria-label="How to play" id="helpButton">?</button><button class="close-game" aria-label="Close word challenge" id="closeGame">✕</button></header>
 <div id="message" role="status" aria-live="polite"></div><div id="board" aria-label="Word challenge board"></div><div id="keyboard"></div><button id="retry" hidden>Try again</button>
 </main>
 <dialog id="help"><h2>How to play</h2><p>Guess the five-letter word in six tries. Use your keyboard or tap the letters.</p><p>Green: correct letter and position. Yellow: correct letter, different position. Gray: not present in the remaining answer.</p><p>If you run out of guesses, retry without revealing the answer.</p><button id="closeHelp">Play</button></dialog>

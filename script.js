@@ -14,8 +14,11 @@ function closeGeo() { geoDialog.close(); geoDialog.replaceChildren(); syncActivi
 geoDialog.addEventListener('cancel', event => { event.preventDefault(); closeGeo(); });
 function openGeo(challenge, opener) {
   geoOpener = opener;
+  geoDialog.classList.toggle('wordle-dialog', challenge.type === 'wordle');
+  geoDialog.setAttribute('aria-label', challenge.type === 'wordle' ? 'Word challenge' : 'Location challenge');
   const frame = document.createElement('iframe'); frame.id = 'geoGameFrame';
-  frame.title = 'Full-screen location challenge'; frame.src = `geo.html?mission=${challenge.id}`;
+  frame.title = challenge.type === 'wordle' ? 'Large word challenge' : 'Full-screen location challenge';
+  frame.src = `${challenge.type === 'wordle' ? 'majdle.html' : 'geo.html'}?mission=${challenge.id}`;
   geoDialog.replaceChildren(frame); geoDialog.showModal(); syncActivity();
 }
 function unlockTime(index) {
@@ -53,9 +56,9 @@ function render() {
   else if (!available(index)) message.textContent = !timeUnlocked(index) ? `Unlocks on ${unlockLabel(index)} (Ljubljana time).` : `Complete Mission ${String(CHALLENGES[index - 1].id).padStart(2, '0')} first.`;
   else {
     message.remove();
-    if (challenge.type === 'geo') {
+    if (challenge.type === 'geo' || challenge.type === 'wordle') {
       const launch = document.createElement('button'); launch.type = 'button'; launch.className = 'terminal-button geo-launch';
-      launch.textContent = 'LAUNCH LOCATION CHALLENGE ↗';
+      launch.textContent = challenge.type === 'wordle' ? 'OPEN WORD CHALLENGE ↗' : 'LAUNCH LOCATION CHALLENGE ↗';
       launch.onclick = () => openGeo(challenge, launch);
       body.append(launch); return;
     }
@@ -126,7 +129,7 @@ function positionBackground() {
   const ratio = backgroundPhoto.naturalWidth / backgroundPhoto.naturalHeight || 0.75;
   const photoWidth = window.innerHeight * ratio;
   const peopleCenter = 0.42;
-  const offset = `${left.right + gap / 2 - photoWidth * peopleCenter}px`;
+  const offset = `${left.right + gap / 2 - photoWidth * peopleCenter + (Number(CHALLENGE_SETTINGS.backgroundOffsetX) || 0)}px`;
   if (document.documentElement.style.getPropertyValue('--photo-left') !== offset) document.documentElement.style.setProperty('--photo-left', offset);
 }
 let backgroundFrame;

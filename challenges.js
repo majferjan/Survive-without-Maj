@@ -2,6 +2,8 @@
 // Change version when replacing puzzles to start fresh browser progress.
 const CHALLENGE_SETTINGS = {
   version: 'my-puzzles-1',
+  // Positive moves the photo RIGHT; negative moves it LEFT (desktop pixels).
+  backgroundOffsetX: 0,
   countdownTarget: '2026-11-01T08:45:00+01:00',
   timedUnlocks: true,
   unlockStart: '2026-10-24T17:30:00+01:00',

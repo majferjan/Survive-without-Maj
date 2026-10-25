@@ -72,3 +72,13 @@ The workflow publishes only HTML, CSS, JavaScript, and assets; local server scri
 OpenStreetMap needs a valid web referrer. GitHub Pages and the included localhost server supply one; file URLs do not. Do not suppress referrers with browser extensions. The code does not proxy or bypass tile-service restrictions.
 
 The game layout follows the controls described in the [FreeGuessr guide](https://freeguessr.com/geo-guide/en/guide/controls.html). [OpenStreetMap tile policy](https://operations.osmfoundation.org/policies/tiles/) and [GitHub Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+## Manual photo alignment
+
+In challenges.js change `backgroundOffsetX: 0`. Positive values move the photo right; negative values move it left, in CSS pixels, relative to its automatic position in the desktop gap. For example use `backgroundOffsetX: 80` or `backgroundOffsetX: -80`, save, and refresh. On mobile the original centered background layout is retained.
+
+## Larger Wordle and diagnostic reset
+
+Wordle opens in a large modal with responsive tiles, larger keyboard buttons, and immediate pressed-button feedback. Close with the X or Escape. Typing updates only the active row; submitted guesses keep their normal persistence.
+
+Open https://majferjan.github.io/Survive-without-Maj/reset-progress.html and click Delete my saved progress to reset this puzzle set on the live site. For local testing open reset-progress.html on your localhost server instead. Close other game tabs first. Loading the page does not delete anything. The utility is in reset-progress.js; it removes only the current puzzle version's completion key and Wordle guess keys. It leaves other stored data, puzzle content, and unlock dates alone. Already-unlocked missions stay time-unlocked after resetting.

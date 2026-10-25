@@ -47,8 +47,18 @@ function handle(key) {
     guesses.push(input); input = '';
     try { localStorage.setItem(storageKey, JSON.stringify(guesses)); } catch {}
     checkFinished();
+    draw();
+    return;
   }
-  draw();
+  // Typing only changes the five active cells; scored rows and keys stay untouched.
+  if (guesses.length < 6) for (let c = 0; c < 5; c++) {
+    const tile = tiles[guesses.length][c], letter = input[c] || '';
+    if (tile.textContent !== letter) {
+      tile.textContent = letter;
+      tile.className = `tile ${letter ? 'filled' : ''}`;
+      tile.setAttribute('aria-label', letter || 'Empty');
+    }
+  }
 }
 function checkFinished() {
   const won = guesses.includes(answer); finished = won || guesses.length === 6;
@@ -58,6 +68,12 @@ function checkFinished() {
 }
 document.getElementById('helpButton').onclick = () => document.getElementById('help').showModal();
 document.getElementById('closeHelp').onclick = () => document.getElementById('help').close();
+function closeGame() {
+  if (parent === window) location.href = 'index.html';
+  else parent.postMessage({ type: 'challenge-close', id: missionId }, location.origin === 'null' ? '*' : location.origin);
+}
+document.getElementById('closeGame').onclick = closeGame;
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('help').open) closeGame(); });
 if (challenge?.type !== 'wordle' || !/^[a-z]{5}$/.test(answer)) {
   finished = true; message.textContent = 'This challenge is waiting for its creator to add a five-letter word in challenges.js.';
 } else {
