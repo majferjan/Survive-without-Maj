@@ -55,6 +55,10 @@ This is a browser-only project: your new answers and target coordinates live in 
 
 ## Verification
 
+Performance checks: `node performance-tests.cjs` verifies that typing reuses the same Wordle tiles and still saves submitted guesses. Countdown updates touch only changed values; hidden-page work pauses; map resize recalculations are batched. Visual effects and storage keys are preserved.
+
+Progress uses browser localStorage, scoped to the site's origin and puzzle-set version. Completed mission IDs and submitted Wordle guesses persist across reloads. The current unsubmitted word and map pin are not saved. Geography completion is saved when Continue missions is pressed. There is no account or server-side progress synchronization. Different browsers/devices and localhost versus GitHub Pages have separate progress. Clearing site data or ending a private-browsing session can erase it.
+
 Run `node tests.cjs` for scoring, geographic distance, countdown, configuration, and JavaScript syntax checks. Verified in-browser: Street View loading, hidden address card, map tile loading over localhost, pin placement, distance feedback, and map expansion.
 
 ## GitHub Pages

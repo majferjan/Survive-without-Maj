@@ -334,6 +334,11 @@ body::after{
 
 
 #progressText { text-align: right; }
+/* Separate expensive animated pixels from the static page without changing effects. */
+.project-title{will-change:filter,opacity}
+.project-title::before{will-change:transform,opacity}
+body::before,body::after{will-change:transform}
+.effects-suspended .project-title,.effects-suspended .project-title::before{animation-play-state:paused}
 .geo-launch{margin-top:22px}
 .geo-dialog{position:fixed;inset:0;width:calc(100vw - 24px);height:calc(100dvh - 24px);max-width:none;max-height:none;margin:auto;padding:0;border:1px solid #73ebb060;border-radius:18px;overflow:hidden;background:#101725;color:#fff;box-shadow:0 20px 100px #000a}
 .geo-dialog::backdrop{background:#02080de8;backdrop-filter:blur(8px)}

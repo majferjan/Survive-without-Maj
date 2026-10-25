@@ -10,13 +10,13 @@ geoDialog.className = 'geo-dialog';
 geoDialog.setAttribute('aria-label', 'Location challenge');
 document.body.append(geoDialog);
 let geoOpener;
-function closeGeo() { geoDialog.close(); geoDialog.replaceChildren(); geoOpener?.focus(); }
+function closeGeo() { geoDialog.close(); geoDialog.replaceChildren(); syncActivity(); geoOpener?.focus(); }
 geoDialog.addEventListener('cancel', event => { event.preventDefault(); closeGeo(); });
 function openGeo(challenge, opener) {
   geoOpener = opener;
   const frame = document.createElement('iframe'); frame.id = 'geoGameFrame';
   frame.title = 'Full-screen location challenge'; frame.src = `geo.html?mission=${challenge.id}`;
-  geoDialog.replaceChildren(frame); geoDialog.showModal();
+  geoDialog.replaceChildren(frame); geoDialog.showModal(); syncActivity();
 }
 function unlockTime(index) {
   const start = Date.parse(CHALLENGE_SETTINGS.unlockStart);
@@ -43,7 +43,7 @@ function render() {
     button.type = 'button';
     button.setAttribute('aria-disabled', String(!available(index)));
     button.setAttribute('aria-current', String(selected === challenge.id));
-    button.onclick = () => { selected = challenge.id; render(); }; list.append(button);
+    button.onclick = () => { if (selected === challenge.id) return; selected = challenge.id; render(); }; list.append(button);
   });
   const index = CHALLENGES.findIndex(c => c.id === selected), challenge = CHALLENGES[index];
   detail.innerHTML = `<div class="fade-in"><div class="detail-top"><div><h2 id="detailHeading" class="detail-title">MISSION ${String(selected).padStart(2, '0')}</h2><div class="badge">${completed.includes(selected) ? 'COMPLETED' : available(index) ? 'AVAILABLE' : 'LOCKED'}</div></div></div><div class="rule"></div><div id="missionBody"></div></div>`;
@@ -87,20 +87,33 @@ window.addEventListener('message', event => {
   if (geoDialog.open) closeGeo();
   render();
 });
+const countdownTarget = Date.parse(CHALLENGE_SETTINGS.countdownTarget);
+const countdownNodes = Object.fromEntries(['days', 'hours', 'minutes', 'seconds'].map(id => [id, document.getElementById(id)]));
 function updateCountdown() {
-  const seconds = Math.max(0, Math.floor((new Date(CHALLENGE_SETTINGS.countdownTarget) - Date.now()) / 1000));
+  const seconds = Math.max(0, Math.floor((countdownTarget - Date.now()) / 1000));
   const values = { days: Math.floor(seconds / 86400), hours: Math.floor(seconds / 3600) % 24, minutes: Math.floor(seconds / 60) % 60, seconds: seconds % 60 };
-  Object.entries(values).forEach(([id, value]) => document.getElementById(id).textContent = String(value).padStart(2, '0'));
+  Object.entries(values).forEach(([id, value]) => {
+    const text = String(value).padStart(2, '0');
+    if (countdownNodes[id].textContent !== text) countdownNodes[id].textContent = text;
+  });
 }
 document.querySelector('[role="timer"]').title = '1 November 2026, 08:45 (Ljubljana time)';
 document.querySelector('.footnote p').textContent = 'One mission unlocks every 26 minutes, 31 October 17:30–1 November 00:00 (Ljubljana).';
 function unlockState() { return CHALLENGES.map((_, index) => timeUnlocked(index)).join(','); }
 let lastUnlockState = unlockState();
-setInterval(() => {
+function tick() {
   updateCountdown();
   const nextState = unlockState();
   if (lastUnlockState !== nextState) { lastUnlockState = nextState; render(); }
-}, 1000);
+}
+let clockTimer;
+function syncActivity() {
+  clearInterval(clockTimer);
+  const suspended = document.hidden || geoDialog.open;
+  document.documentElement.classList.toggle('effects-suspended', suspended);
+  if (!suspended) { tick(); clockTimer = setInterval(tick, 1000); }
+}
+document.addEventListener('visibilitychange', syncActivity);
 // Keep the photo full-height and center the people in the actual panel gap.
 const backgroundPhoto = new Image();
 backgroundPhoto.onload = positionBackground;
@@ -113,9 +126,15 @@ function positionBackground() {
   const ratio = backgroundPhoto.naturalWidth / backgroundPhoto.naturalHeight || 0.75;
   const photoWidth = window.innerHeight * ratio;
   const peopleCenter = 0.42;
-  document.documentElement.style.setProperty('--photo-left', `${left.right + gap / 2 - photoWidth * peopleCenter}px`);
+  const offset = `${left.right + gap / 2 - photoWidth * peopleCenter}px`;
+  if (document.documentElement.style.getPropertyValue('--photo-left') !== offset) document.documentElement.style.setProperty('--photo-left', offset);
 }
-new ResizeObserver(positionBackground).observe(document.querySelector('.app-shell'));
-window.addEventListener('resize', positionBackground);
+let backgroundFrame;
+function scheduleBackground() {
+  if (backgroundFrame) return;
+  backgroundFrame = requestAnimationFrame(() => { backgroundFrame = null; positionBackground(); });
+}
+new ResizeObserver(scheduleBackground).observe(document.querySelector('.app-shell'));
+window.addEventListener('resize', scheduleBackground);
 positionBackground();
-updateCountdown(); render();
+updateCountdown(); render(); syncActivity();

@@ -26,7 +26,12 @@ if (!configured) {
     const map = L.map('map', { worldCopyJump: true }).setView([25, 0], 2);
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, referrerPolicy: 'strict-origin-when-cross-origin', attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors' }).addTo(map);
     tiles.on('tileerror', () => { mapStatus.hidden = false; mapStatus.textContent = 'Map tiles could not load. Check your connection, disable referrer-blocking extensions for this site, then reload.'; });
-    new ResizeObserver(() => map.invalidateSize({ pan: false })).observe(document.getElementById('map'));
+    // Resize once after the CSS expansion settles, not on every animation frame.
+    let resizeTimer;
+    new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => map.invalidateSize({ pan: false, debounceMoveend: true }), 200);
+    }).observe(document.getElementById('map'));
     document.getElementById('expand').onclick = () => {
       const expanded = panel.classList.toggle('expanded');
       document.getElementById('expand').setAttribute('aria-expanded', String(expanded));

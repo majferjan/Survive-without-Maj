@@ -6,20 +6,36 @@ const storageKey = `wordle-${CHALLENGE_SETTINGS.version}-${missionId}-${answer}`
 let guesses = [], input = '', finished = false;
 try { const saved = JSON.parse(localStorage.getItem(storageKey) || '[]'); if (Array.isArray(saved)) guesses = saved.filter(w => /^[a-z]{5}$/.test(w)).slice(0, 6); } catch {}
 function complete() { parent.postMessage({ type: 'challenge-complete', id: missionId }, location.origin === 'null' ? '*' : location.origin); }
-function draw() {
-  board.replaceChildren();
-  const keyStates = {}, rank = { absent: 1, present: 2, correct: 3 };
+const tiles = [];
+function createBoard() {
   for (let r = 0; r < 6; r++) {
     const row = document.createElement('div'); row.className = 'row';
-    const word = guesses[r] || (r === guesses.length ? input : ''), scores = guesses[r] ? scoreWord(word, answer) : [];
+    tiles[r] = [];
     for (let c = 0; c < 5; c++) {
-      const tile = document.createElement('div'); tile.className = `tile ${scores[c] || (word[c] ? 'filled' : '')}`; tile.textContent = word[c] || '';
-      tile.setAttribute('aria-label', word[c] ? `${word[c]}${scores[c] ? ': ' + scores[c] : ''}` : 'Empty'); row.append(tile);
-      if (scores[c] && (rank[scores[c]] > (rank[keyStates[word[c]]] || 0))) keyStates[word[c]] = scores[c];
+      const tile = document.createElement('div'); tiles[r].push(tile); row.append(tile);
     }
     board.append(row);
   }
-  keyboard.querySelectorAll('button').forEach(b => { b.className = `key ${b.dataset.key.length > 1 ? 'wide' : ''} ${keyStates[b.dataset.key] || ''}`; b.disabled = finished; });
+}
+function draw() {
+  if (!tiles.length) createBoard();
+  const keyStates = {}, rank = { absent: 1, present: 2, correct: 3 };
+  for (let r = 0; r < 6; r++) {
+    const word = guesses[r] || (r === guesses.length ? input : ''), scores = guesses[r] ? scoreWord(word, answer) : [];
+    for (let c = 0; c < 5; c++) {
+      const tile = tiles[r][c], className = `tile ${scores[c] || (word[c] ? 'filled' : '')}`;
+      if (tile.className !== className) tile.className = className;
+      if (tile.textContent !== (word[c] || '')) tile.textContent = word[c] || '';
+      const label = word[c] ? `${word[c]}${scores[c] ? ': ' + scores[c] : ''}` : 'Empty';
+      if (tile.getAttribute('aria-label') !== label) tile.setAttribute('aria-label', label);
+      if (scores[c] && (rank[scores[c]] > (rank[keyStates[word[c]]] || 0))) keyStates[word[c]] = scores[c];
+    }
+  }
+  keyboard.querySelectorAll('button').forEach(b => {
+    const className = `key ${b.dataset.key.length > 1 ? 'wide' : ''} ${keyStates[b.dataset.key] || ''}`;
+    if (b.className !== className) b.className = className;
+    if (b.disabled !== finished) b.disabled = finished;
+  });
 }
 function handle(key) {
   if (finished || document.getElementById('help').open) return;

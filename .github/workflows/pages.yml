@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: '22'
       - run: node tests.cjs
+      - run: node performance-tests.cjs
       - name: Prepare public files
         run: |
           mkdir _site
