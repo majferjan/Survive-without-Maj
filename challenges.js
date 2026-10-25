@@ -96,5 +96,7 @@ const CHALLENGES = [
 ];
 
 // To replace a word challenge with geography, use:
-// { id: 1, type: 'geo', streetViewEmbedUrl: '', latitude: null, longitude: null, radiusMeters: 250 }
+// { id: 1, type: 'geo', streetViewEmbedUrl: 'PASTE_STREET_VIEW_EMBED_LINK_HERE' }
 // Paste the iframe src URL from your chosen Street View embed.
+
+// Coordinates are extracted from the embed link. Every location uses a 300-meter radius.

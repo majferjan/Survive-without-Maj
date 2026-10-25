@@ -38,3 +38,14 @@ for(let i=0;i<16;i++){
   assert.equal(run('timeUnlocked('+i+')'),true);
 }
 console.log('PASS: all 16 unlock boundaries, 26-minute spacing, first and last releases.');
+
+// Link parsing uses synthetic coordinates, never logs puzzle locations.
+context.URL = URL;
+assert.equal(run('GEO_RADIUS_METERS'),300);
+assert.equal(run("parseStreetViewLink('https://www.google.com/maps/embed?pb=!6m8!1m7!1stest!2m2!1d12.5!2d-45.25!3f0').lng"),-45.25);
+assert.equal(run("parseStreetViewLink('https://www.google.com/maps/embed/v1/streetview?location=0,0').lat"),0);
+assert.equal(run("parseStreetViewLink('https://maps.app.goo.gl/example')"),null);
+assert.equal(run("parseStreetViewLink('https://www.google.com/maps/embed?pb=!6m8!2m2!1d91!2d0')"),null);
+assert.equal(run("parseStreetViewLink('https://example.com/maps/embed?pb=!6m8!2m2!1d1!2d2')"),null);
+assert.equal(run("CHALLENGES.filter(c=>c.type==='geo').every(c=>parseStreetViewLink(c.streetViewEmbedUrl)!==null)"),true);
+console.log('PASS: fixed 300m radius, coordinate extraction, invalid-link rejection, existing geography links.');

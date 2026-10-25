@@ -8,16 +8,15 @@ const send = type => parent.postMessage({ type, id }, location.origin === 'null'
 document.getElementById('exit').onclick = () => { if (parent === window) location.href = 'index.html'; else send('challenge-close'); };
 document.getElementById('finish').onclick = () => { if (parent === window) location.href = 'index.html'; else send('challenge-complete'); };
 document.addEventListener('keydown', event => { if (event.key === 'Escape') send('challenge-close'); });
-let embed;
-try { embed = new URL(config?.streetViewEmbedUrl); } catch {}
-const configured = config?.type === 'geo' && Number.isFinite(config.latitude) && Math.abs(config.latitude) <= 90 && Number.isFinite(config.longitude) && Math.abs(config.longitude) <= 180 && Number.isFinite(config.radiusMeters) && config.radiusMeters > 0 && embed?.protocol === 'https:' && embed.hostname === 'www.google.com' && embed.pathname.startsWith('/maps/embed');
+const target = parseStreetViewLink(config?.streetViewEmbedUrl);
+const configured = config?.type === 'geo' && target;
 if (!configured) {
-  feedback.textContent = 'This mission needs its Street View embed URL, target coordinates, and radius in challenges.js.';
+  feedback.textContent = 'Paste a Street View embed link into challenges.js. In Google Maps Street View, choose Share → Embed a map → Copy HTML. Paste the src link (or the whole snippet). Short sharing links cannot be used here.';
   panel.hidden = true;
 } else {
-  street.src = embed.href; street.hidden = false;
-  document.getElementById('restart').onclick = () => { street.src = embed.href; };
-  feedback.textContent = `Find the starting location. Get within ${config.radiusMeters} meters to complete the mission.`;
+  street.src = target.url; street.hidden = false;
+  document.getElementById('restart').onclick = () => { street.src = target.url; };
+  feedback.textContent = `Find the starting location. Get within ${GEO_RADIUS_METERS} meters to complete the mission.`;
   if (location.protocol === 'file:') {
     mapStatus.hidden = false; mapStatus.textContent = 'Open the site using START-SITE.cmd, VS Code Live Server, or GitHub Pages. Map tiles cannot load reliably from a file URL.';
   } else if (typeof L === 'undefined') {
@@ -48,8 +47,8 @@ if (!configured) {
     });
     submit.onclick = () => {
       if (!guess || won) return;
-      const distance = distanceMeters(guess, { lat: config.latitude, lng: config.longitude });
-      if (distance <= config.radiusMeters) {
+      const distance = distanceMeters(guess, target);
+      if (distance <= GEO_RADIUS_METERS) {
         won = true; submit.disabled = true;
         document.getElementById('resultDistance').textContent = `${Math.round(distance)} meters from the starting location.`;
         document.getElementById('result').hidden = false;

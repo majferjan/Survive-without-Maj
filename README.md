@@ -18,26 +18,17 @@ The 16 missions unlock every 26 minutes from 31 October 2026 at 17:30 through 1 
 
 ## Optional location challenge
 
-Replace any one mission object in challenges.js with this structure (keep its id):
+Only one location value is needed per mission:
 
 ```js
-{
-  id: 1,
-  type: 'geo',
-  streetViewEmbedUrl: '',
-  latitude: null,
-  longitude: null,
-  radiusMeters: 250
-}
+{ id: 2, type: 'geo', streetViewEmbedUrl: 'PASTE_STREET_VIEW_EMBED_LINK_HERE' }
 ```
 
-Supply the coordinates of your chosen starting location and a matching Street View embed URL. In Google Maps, choose a Street View panorama, open its sharing/embedding option, and copy the URL from the embed HTML's `src` attribute into `streetViewEmbedUrl`. Use an `https://www.google.com/maps/embed...` URL, not a shortened sharing link or the whole iframe markup. Alternatively, use the documented Maps Embed API streetview URL with your own configured API key.
+In Google Maps, open the exact Street View panorama, use Share → Embed a map → Copy HTML, and paste the iframe src link into streetViewEmbedUrl. The entire iframe snippet is also accepted if stored as a properly quoted JavaScript string. Regular shortened sharing links are not embeddable; use the embed link.
 
-The player explores Street View and clicks an OpenStreetMap map to place a pin. Check location measures the distance to the starting point. A guess within `radiusMeters` completes the mission; other guesses show distance and allow retrying. The target is not marked on the guessing map. The game opens in a large modal with a Street View canvas and expandable guessing map. Its header visually covers the embedded location/address card; Google attribution remains visible. Other labels within Street View imagery/navigation are controlled by Google. This is a casual game, not an exact FreeGuessr replica.
+Coordinates are read automatically from the starting panorama's embed URL. All location challenges use a fixed 300-meter radius; there are no latitude, longitude, or per-mission radius fields to maintain. Unsupported links show a setup message instead of silently guessing the target location.
 
-Preview a configured location directly at `geo.html?mission=1`. Internet access is required for Street View, Leaflet, map tiles, and the original web fonts. If the map library fails to load, the page displays a connection message. A valid, accessible Street View embed must be supplied before the panorama can be tested.
-
-References: [Leaflet quick start](https://leafletjs.com/examples/quick-start/), [Google Maps sharing and embedding](https://support.google.com/maps/answer/7101463), [Maps Embed API](https://developers.google.com/maps/documentation/embed/embedding-map).
+The game opens in a large modal with an expandable guessing map. The location card is covered by the game header, with Google's attribution visible. Preview using Live Server or GitHub Pages, not a file URL.
 
 ## Files and uploading
 
