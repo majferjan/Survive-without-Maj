@@ -13,25 +13,22 @@ const CHALLENGES = [
   {
     "id": 1,
     "type": "wordle",
-    "word": "CUTIE"
+    "word": "BLISS"
   },
   {
     id: 2,
     type: 'geo',
     streetViewEmbedUrl: 'https://www.google.com/maps/embed?pb=!4v1792929587488!6m8!1m7!1s9g8WOaaxe5RDzj8o2ah6Gg!2m2!1d50.68811568425743!2d14.76173964878918!3f264.9477429116344!4f-29.22096189071086!5f0.7820865974627469',
-    latitude: 50.5031131,
-    longitude: 14.6226569,
-    radiusMeters: 250
   },
   {
     "id": 3,
     "type": "wordle",
-    "word": ""
+    "word": "AEROS"
   },
   {
     "id": 4,
-    "type": "wordle",
-    "word": ""
+    "type": "geo",
+    "streetViewEmbedUrl": "https://www.google.com/maps/embed?pb=!4v1793037992601!6m8!1m7!1sCAoSHENJQUJJaEIzLTJIU05DU0JMQ09hWHN2M0w0cVk.!2m2!1d50.76977714801142!2d14.48408954571432!3f130.88191911735004!4f2.0499464618753223!5f0.7820865974627469"
   },
   {
     "id": 5,
