@@ -79,8 +79,9 @@ const CHALLENGES = [
   },
   {
     "id": 14,
-    "type": "wordle",
-    "word": ""
+    "type": "text",
+    "message": "Now only thing left to do is to brush your teeth and hop in the cosy fresh bed of ours and ill meet you soon. Miluju te Klárko <3",
+    "answer": "Taky te miluju <3"
   }
 ];
 
