@@ -75,3 +75,18 @@ Wordle opens in a large modal with responsive tiles, larger keyboard buttons, an
 Open https://majferjan.github.io/Survive-without-Maj/reset-progress.html and click Delete my saved progress to reset this puzzle set on the live site. For local testing open reset-progress.html on your localhost server instead. Close other game tabs first. Loading the page does not delete anything. The utility is in reset-progress.js; it removes only the current puzzle version's completion key and Wordle guess keys. It leaves other stored data, puzzle content, and unlock dates alone. Already-unlocked missions stay time-unlocked after resetting.
 
 Reset synchronization: the reset utility now invalidates open game sessions with a reset token. Updated tabs refresh on reset, visibility changes, or restoration from the browser Back cache. Stale sessions cannot submit wins or guesses. After installing this update, refresh any tabs still running older code before resetting. Opening the reset page alone does not delete progress; click Delete my saved progress.
+
+## Text-answer challenges
+
+Replace any mission object in challenges.js (keeping its id) with:
+
+```js
+{
+  id: 4,
+  type: 'text',
+  message: 'Write your message or clue here.',
+  answer: 'The correct response'
+}
+```
+
+The player sees the message, an answer field, and a Verify button, in the original mission-panel style. Enter also submits. Any nonempty answer length is supported; this is not limited to five letters. Matching ignores capitalization and extra whitespace, but punctuation and accents must match. Incorrect attempts do not reveal the expected answer. Correct answers save mission completion and unlock the next mission according to the existing schedule. The reset-progress utility includes completed text challenges automatically. Messages are plain text; use \n for a line break rather than HTML.

@@ -56,6 +56,10 @@ function render() {
   else if (!available(index)) message.textContent = !timeUnlocked(index) ? `Unlocks on ${unlockLabel(index)} (Ljubljana time).` : `Complete Mission ${String(CHALLENGES[index - 1].id).padStart(2, '0')} first.`;
   else {
     message.remove();
+    if (challenge.type === 'text') {
+      renderTextChallenge(body, challenge, () => completeMission(challenge.id));
+      return;
+    }
     if (challenge.type === 'geo' || challenge.type === 'wordle') {
       const launch = document.createElement('button'); launch.type = 'button'; launch.className = 'terminal-button geo-launch';
       launch.textContent = challenge.type === 'wordle' ? 'OPEN WORD CHALLENGE ↗' : 'LAUNCH LOCATION CHALLENGE ↗';
@@ -78,18 +82,22 @@ function render() {
     shell.append(frame); launch.append(toggle, shell); body.append(launch);
   }
 }
+function completeMission(id) {
+  if (!progressSessionCurrent()) { refreshAfterProgressReset(); return; }
+  const index = CHALLENGES.findIndex(c => c.id === id);
+  if (index < 0 || id !== selected || !available(index) || completed.includes(id)) return;
+  completed.push(id);
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(completed)); } catch {}
+  if (geoDialog.open) closeGeo();
+  render();
+}
 window.addEventListener('message', event => {
   if (!progressSessionCurrent()) { refreshAfterProgressReset(); return; }
   const frame = geoDialog.open ? document.getElementById('geoGameFrame') : document.getElementById('puzzleFrame');
   if (!frame || event.source !== frame.contentWindow || event.origin !== location.origin) return;
   if (event.data?.type === 'challenge-close' && event.data.id === selected) { closeGeo(); return; }
   if (event.data?.type !== 'challenge-complete' || event.data.id !== selected) return;
-  const index = CHALLENGES.findIndex(c => c.id === selected);
-  if (!available(index) || completed.includes(selected)) return;
-  completed.push(selected);
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(completed)); } catch {}
-  if (geoDialog.open) closeGeo();
-  render();
+  completeMission(selected);
 });
 const countdownTarget = Date.parse(CHALLENGE_SETTINGS.countdownTarget);
 const countdownNodes = Object.fromEntries(['days', 'hours', 'minutes', 'seconds'].map(id => [id, document.getElementById(id)]));

@@ -8,6 +8,12 @@ function scoreWord(guess, answer) {
   });
   return result;
 }
+
+function textAnswerMatches(response, expected) {
+  const normalize = value => typeof value === 'string' ? value.normalize('NFC').trim().replace(/\s+/g, ' ').toLowerCase() : '';
+  const answer = normalize(expected);
+  return answer.length > 0 && normalize(response) === answer;
+}
 function distanceMeters(a, b) {
   const rad = degrees => degrees * Math.PI / 180;
   const h = Math.sin(rad(b.lat - a.lat) / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lng - a.lng) / 2) ** 2;

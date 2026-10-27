@@ -44,3 +44,15 @@ assert.equal(entries.has('wordle-test-1-example'),false);
 listeners.storage({key:'challenge-reset-test'});listeners.pageshow();listeners.visibilitychange();
 assert.equal(reloads,3);
 console.log('PASS: reset invalidates stale sessions and refreshes open/restored tabs.');
+
+// Exercise the text form without changing any real puzzle or progress.
+Element.prototype.focus=function(){};
+vm.runInContext(fs.readFileSync('text-challenge.js','utf8'),context);
+const textContainer=new Element();let textWins=0;
+context.renderTextChallenge(textContainer,{message:'<b>Plain clue</b>',answer:'Hello there'},()=>textWins++);
+assert.equal(textContainer.children[0].textContent,'<b>Plain clue</b>');
+const form=textContainer.children[1],field=form.children[1].children[0],feedback=form.children[2];
+field.value='wrong';form.onsubmit({preventDefault(){}});assert.equal(textWins,0);assert.equal(feedback.textContent,'Not quite. Try again.');
+field.value='  HELLO   there ';form.onsubmit({preventDefault(){}});assert.equal(textWins,1);
+form.onsubmit({preventDefault(){}});assert.equal(textWins,1);
+console.log('PASS: text challenge prompt, incorrect/correct submissions, and duplicate-submit prevention.');

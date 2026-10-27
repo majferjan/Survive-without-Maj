@@ -334,6 +334,7 @@ body::after{
 
 
 #progressText { text-align: right; }
+.text-prompt{white-space:pre-wrap;overflow-wrap:anywhere}
 /* Separate expensive animated pixels from the static page without changing effects. */
 .project-title{will-change:filter,opacity}
 .project-title::before{will-change:transform,opacity}
