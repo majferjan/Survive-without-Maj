@@ -23,7 +23,7 @@ const CHALLENGES = [
   {
     "id": 3,
     "type": "wordle",
-    "word": "AEROS"
+    "word": "KLARA"
   },
   {
     "id": 4,
