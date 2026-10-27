@@ -9,7 +9,7 @@ class Element {
 }
 const ids=Object.fromEntries(['message','board','keyboard','retry','helpButton','closeHelp','help','closeGame'].map(id=>[id,new Element()]));
 const saved=new Map();
-const context=vm.createContext({URLSearchParams,location:{search:'?mission=1',origin:'http://localhost'},parent:{postMessage(){}},document:{getElementById:id=>ids[id],createElement:()=>new Element(),addEventListener(){}},localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v),removeItem:k=>saved.delete(k)}});
+const context=vm.createContext({progressSessionCurrent:()=>true,refreshAfterProgressReset(){},URLSearchParams,location:{search:'?mission=1',origin:'http://localhost'},parent:{postMessage(){}},document:{getElementById:id=>ids[id],createElement:()=>new Element(),addEventListener(){}},localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v),removeItem:k=>saved.delete(k)}});
 vm.runInContext("const CHALLENGE_SETTINGS={version:'test'};const CHALLENGES=[{id:1,type:'wordle',word:'apple'}];const VALID_WORDS=new Set(['crane']);",context);
 vm.runInContext(fs.readFileSync('puzzle-core.js','utf8')+fs.readFileSync('wordle.js','utf8'),context);
 const before=created,first=ids.board.children[0].children[0];
@@ -25,8 +25,22 @@ console.log('PASS: persistent Wordle tiles, zero DOM allocation on typing, scori
 const resetContext=vm.createContext({});
 vm.runInContext(fs.readFileSync('reset-progress.js','utf8'),resetContext);
 const entries=new Map([['custom-challenges-test','[1]'],['wordle-test-1-example','[]'],['unrelated','keep'],['custom-challenges-other','keep']]);
-const mock={get length(){return entries.size},key:i=>[...entries.keys()][i],removeItem:key=>entries.delete(key)};
+const mock={get length(){return entries.size},key:i=>[...entries.keys()][i],removeItem:key=>entries.delete(key),setItem:(key,value)=>entries.set(key,value)};
 assert.equal(resetContext.resetChallengeProgress(mock,'test'),2);
 assert.equal(entries.get('unrelated'),'keep');
 assert.equal(entries.get('custom-challenges-other'),'keep');
 console.log('PASS: reset only removes current puzzle-set progress.');
+
+// Model an open game tab and a reset in another tab without real browser data.
+let reloads=0;const listeners={};
+const sessionContext=vm.createContext({CHALLENGE_SETTINGS:{version:'test'},localStorage:{getItem:k=>entries.get(k)||null},window:{addEventListener:(name,fn)=>listeners[name]=fn},document:{hidden:false,addEventListener:(name,fn)=>listeners[name]=fn},location:{reload:()=>reloads++}});
+vm.runInContext(fs.readFileSync('progress-session.js','utf8'),sessionContext);
+assert.equal(sessionContext.progressSessionCurrent(),true);
+entries.set('custom-challenges-test','[1]');entries.set('wordle-test-1-example','["example"]');
+resetContext.resetChallengeProgress(mock,'test');
+assert.equal(sessionContext.progressSessionCurrent(),false);
+assert.equal(entries.has('custom-challenges-test'),false);
+assert.equal(entries.has('wordle-test-1-example'),false);
+listeners.storage({key:'challenge-reset-test'});listeners.pageshow();listeners.visibilitychange();
+assert.equal(reloads,3);
+console.log('PASS: reset invalidates stale sessions and refreshes open/restored tabs.');

@@ -4,7 +4,10 @@ const feedback = document.getElementById('feedback'), submit = document.getEleme
 const street = document.getElementById('streetview'), panel = document.getElementById('guessPanel');
 const mapStatus = document.getElementById('mapStatus');
 document.getElementById('missionNumber').textContent = String(id).padStart(2, '0');
-const send = type => parent.postMessage({ type, id }, location.origin === 'null' ? '*' : location.origin);
+const send = type => {
+  if (!progressSessionCurrent()) { refreshAfterProgressReset(); return; }
+  parent.postMessage({ type, id }, location.origin === 'null' ? '*' : location.origin);
+};
 document.getElementById('exit').onclick = () => { if (parent === window) location.href = 'index.html'; else send('challenge-close'); };
 document.getElementById('finish').onclick = () => { if (parent === window) location.href = 'index.html'; else send('challenge-complete'); };
 document.addEventListener('keydown', event => { if (event.key === 'Escape') send('challenge-close'); });

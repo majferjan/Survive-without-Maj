@@ -5,7 +5,7 @@ const message = document.getElementById('message'), board = document.getElementB
 const storageKey = `wordle-${CHALLENGE_SETTINGS.version}-${missionId}-${answer}`;
 let guesses = [], input = '', finished = false;
 try { const saved = JSON.parse(localStorage.getItem(storageKey) || '[]'); if (Array.isArray(saved)) guesses = saved.filter(w => /^[a-z]{5}$/.test(w)).slice(0, 6); } catch {}
-function complete() { parent.postMessage({ type: 'challenge-complete', id: missionId }, location.origin === 'null' ? '*' : location.origin); }
+function complete() { if (progressSessionCurrent()) parent.postMessage({ type: 'challenge-complete', id: missionId }, location.origin === 'null' ? '*' : location.origin); }
 const tiles = [];
 function createBoard() {
   for (let r = 0; r < 6; r++) {
@@ -38,6 +38,7 @@ function draw() {
   });
 }
 function handle(key) {
+  if (!progressSessionCurrent()) { refreshAfterProgressReset(); return; }
   if (finished || document.getElementById('help').open) return;
   if (key === 'Backspace') input = input.slice(0, -1);
   else if (/^[a-z]$/i.test(key) && input.length < 5) input += key.toLowerCase();

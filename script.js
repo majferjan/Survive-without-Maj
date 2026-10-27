@@ -79,6 +79,7 @@ function render() {
   }
 }
 window.addEventListener('message', event => {
+  if (!progressSessionCurrent()) { refreshAfterProgressReset(); return; }
   const frame = geoDialog.open ? document.getElementById('geoGameFrame') : document.getElementById('puzzleFrame');
   if (!frame || event.source !== frame.contentWindow || event.origin !== location.origin) return;
   if (event.data?.type === 'challenge-close' && event.data.id === selected) { closeGeo(); return; }
