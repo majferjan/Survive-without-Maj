@@ -3,9 +3,9 @@
 const CHALLENGE_SETTINGS = {
   version: 'my-puzzles-1',
   // Positive moves the photo RIGHT; negative moves it LEFT (desktop pixels).
-  backgroundOffsetX: 0,
+  backgroundOffsetX: 100,
   countdownTarget: '2026-11-01T08:45:00+01:00',
-  timedUnlocks: true,
+  timedUnlocks: false,
   unlockStart: '2026-10-24T17:30:00+01:00',
   unlockEnd: '2026-10-25T00:00:00+01:00'
 };
@@ -32,61 +32,53 @@ const CHALLENGES = [
   },
   {
     "id": 5,
-    "type": "wordle",
-    "word": ""
+    "type": "geo",
+    "streetViewEmbedUrl": "https://www.google.com/maps/embed?pb=!4v1793131922528!6m8!1m7!1sxKzujcTRaft_Jliz6oEoxg!2m2!1d55.69199265286787!2d12.58724127082603!3f221.08219996900573!4f-11.277005743511893!5f0.7820865974627469"
   },
   {
     "id": 6,
-    "type": "wordle",
-    "word": ""
+    "type": "geo",
+    "streetViewEmbedUrl": "https://www.google.com/maps/embed?pb=!4v1793132111138!6m8!1m7!1slEOVJ3bcYqOqnNM9JKWrKQ!2m2!1d49.87634214605348!2d14.8938139287048!3f353.9852991404943!4f-2.3219371341885875!5f0.7820865974627469"
   },
   {
     "id": 7,
     "type": "wordle",
-    "word": ""
+    "word": "DRESS"
   },
   {
     "id": 8,
-    "type": "wordle",
-    "word": ""
+    "type": "text",
+    "message": "You have been doing challenges for long enough, i think you need a treat <3. Look under there!!! Underwear :)",
+    "answer": "Bueno"
   },
   {
     "id": 9,
     "type": "wordle",
-    "word": ""
+    "word": "Chess"
   },
   {
     "id": 10,
-    "type": "wordle",
-    "word": ""
+    "type": "geo",
+    "streetViewEmbedUrl": "https://www.google.com/maps/embed?pb=!4v1793132265724!6m8!1m7!1sf_cSwV9ZO72IH1RpivsuPg!2m2!1d45.9322108700424!2d14.68532203613944!3f159.13597086585034!4f-15.002849816870295!5f0.7820865974627469"
   },
   {
     "id": 11,
     "type": "wordle",
-    "word": ""
+    "word": "JUICY"
   },
   {
     "id": 12,
-    "type": "wordle",
-    "word": ""
+    "type": "text",
+    "message": "Another pitstop time :) I think you will require a leap of faith to find this one, but hats off for you if you do <3",
+    "answer": "Chess"
   },
   {
     "id": 13,
-    "type": "wordle",
-    "word": ""
+    "type": "geo",
+    "streetViewEmbedUrl": "https://www.google.com/maps/embed?pb=!4v1793134217151!6m8!1m7!1sxidMNnRlQQEfnBNZoBdSdg!2m2!1d45.51303076691035!2d13.58605810281551!3f214.21145198368848!4f-28.18017325274799!5f0.7820865974627469"
   },
   {
     "id": 14,
-    "type": "wordle",
-    "word": ""
-  },
-  {
-    "id": 15,
-    "type": "wordle",
-    "word": ""
-  },
-  {
-    "id": 16,
     "type": "wordle",
     "word": ""
   }

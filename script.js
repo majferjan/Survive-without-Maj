@@ -3,7 +3,7 @@ let completed;
 try { completed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { completed = []; }
 if (!Array.isArray(completed)) completed = [];
 completed = [...new Set(completed.filter(id => CHALLENGES.some(c => c.id === id)))];
-let selected = CHALLENGES.find(c => !completed.includes(c.id))?.id || 1;
+let selected = CHALLENGES.find(c => !completed.includes(c.id))?.id || CHALLENGES[0].id;
 const detail = document.getElementById('detailContent');
 const geoDialog = document.createElement('dialog');
 geoDialog.className = 'geo-dialog';
@@ -52,7 +52,7 @@ function render() {
   detail.innerHTML = `<div class="fade-in"><div class="detail-top"><div><h2 id="detailHeading" class="detail-title">MISSION ${String(selected).padStart(2, '0')}</h2><div class="badge">${completed.includes(selected) ? 'COMPLETED' : available(index) ? 'AVAILABLE' : 'LOCKED'}</div></div></div><div class="rule"></div><div id="missionBody"></div></div>`;
   const body = document.getElementById('missionBody');
   const message = document.createElement('p'); message.className = 'detail-copy'; body.append(message);
-  if (completed.includes(selected)) message.textContent = percent === 100 ? 'All 16 challenges complete. See you soon! ♥' : 'Challenge complete! Select the next mission.';
+  if (completed.includes(selected)) message.textContent = percent === 100 ? `All ${CHALLENGES.length} challenges complete. See you soon! ♥` : 'Challenge complete! Select the next mission.';
   else if (!available(index)) message.textContent = !timeUnlocked(index) ? `Unlocks on ${unlockLabel(index)} (Ljubljana time).` : `Complete Mission ${String(CHALLENGES[index - 1].id).padStart(2, '0')} first.`;
   else {
     message.remove();
@@ -110,7 +110,11 @@ function updateCountdown() {
   });
 }
 document.querySelector('[role="timer"]').title = '1 November 2026, 08:45 (Ljubljana time)';
-document.querySelector('.footnote p').textContent = 'One mission unlocks every 26 minutes, 31 October 17:30–1 November 00:00 (Ljubljana).';
+const scheduleStart = unlockLabel(0);
+const scheduleEnd = unlockLabel(CHALLENGES.length - 1);
+document.querySelector('.footnote p').textContent = CHALLENGE_SETTINGS.timedUnlocks
+  ? (CHALLENGES.length === 1 ? 'Mission unlocks on ' + scheduleStart + ' (Ljubljana).' : CHALLENGES.length + ' missions unlock evenly from ' + scheduleStart + ' to ' + scheduleEnd + ' (Ljubljana).')
+  : CHALLENGES.length + ' missions. Complete them in order.';
 function unlockState() { return CHALLENGES.map((_, index) => timeUnlocked(index)).join(','); }
 let lastUnlockState = unlockState();
 function tick() {
